@@ -1,14 +1,22 @@
-// https://leetcode-cn.com/problems/subarray-sum-equals-k/
 class Solution {
     public int subarraySum(int[] nums, int k) {
         int ans = 0;
+        Map<Integer, Integer> prevSumCount = new HashMap<>();
         int[] sumArr = getSumArray(nums);
-        for(int i = 1; i < sumArr.length; i++) {
-            for (int j = i; j < sumArr.length; j++) {
-                if (k == sumArr[j] - sumArr[i - 1]) {
-                    ans++;
-                }
-            }
+        // 枚举搜索
+        // for(int i = 1; i < sumArr.length; i++) {
+        //     for (int j = i; j < sumArr.length; j++) {
+        //         if (k == sumArr[j] - sumArr[i - 1]) {
+        //             ans++;
+        //         }
+        //     }
+        // }
+
+        // 哈希查找 s[i] - s[j] = k ->  find (s[j] = s[i] - k)
+        prevSumCount.put(0, 1);     // s[i] == k
+        for (int i = 1; i < sumArr.length; i++) {
+            ans += prevSumCount.getOrDefault(sumArr[i] - k, 0); // find s[j]
+            prevSumCount.put(sumArr[i], prevSumCount.getOrDefault(sumArr[i], 0) + 1); // put s[j]
         }
         return ans;
     }
